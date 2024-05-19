@@ -7,3 +7,6 @@ body {
   background: #F3F4F6; 
 }
 
+.center {
+  @apply w-full h-full flex justify-center items-center
+}

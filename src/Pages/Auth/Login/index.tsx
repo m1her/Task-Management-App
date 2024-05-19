@@ -1,5 +1,16 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import "./style.css";
+import {
+  loginCardTRansitions,
+  loginCardVarients,
+  loginHidingCardTransition,
+  loginHidingCardVarients,
+  loginSuccessfulMessageStrokeTransition,
+  loginSuccessfulMessageStrokeVarients,
+  loginSuccessfulMessageTransition,
+  loginSuccessfulMessageVarients,
+} from "./animation";
 
 export const Login = () => {
   const [email, setEmail] = useState("asdasd");
@@ -16,57 +27,34 @@ export const Login = () => {
     setEmail(event.target.value);
   };
   const handleSubmit = () => {
-    setIsChecked("true");
+    setIsChecked("wrong");
     setTimeout(() => {
       setIsChecked("none");
-    }, 5000);
+    }, 500);
   };
   return (
-    <div className="w-full h-screen flex justify-center items-center">
+    <div className="login-page-container">
       <motion.div
-        className="relative p-4 w-[400px] h-[400px] overflow-hidden border-2 rounded-md border-[#E5E7EB] shadow-[0_0_20px_-5px_rgba(0,0,0,0.2)] transition-colors duration-500 ease-in-out"
-        initial={{ width: 20, height: 20, backgroundColor: "white" }}
-        animate={{
-          rotate: 360,
-          width: 400,
-          height: 400,
-          x: isChecked === "true" ? -400 : 0,
-          boxShadow:
-            isChecked === "wrong"
-              ? "inset 0 0 20px 10px rgba(239,68,68,0.6)"
-              : "inset 0 0 20px 10px rgba(255,255,255,0)",
-        }}
-        transition={{
-          width: {
-            type: "spring",
-            stiffness: 100,
-            duration: 0.3,
-          },
-          height: {
-            type: "spring",
-            stiffness: 100,
-            duration: 0.3,
-          },
-          rotate: {
-            duration: 0.4,
-            ease: "linear",
-          },
-          x: {
-            duration: 0.4,
-            type: "spring",
-            stiffness: 50,
-          },
-        }}
+        className="login-card"
+        variants={loginCardVarients}
+        initial={loginCardVarients.initial}
+        animate={
+          isChecked === "true"
+            ? loginCardVarients.animateTrue
+            : isChecked === "wrong"
+            ? loginCardVarients.animateWrong
+            : loginCardVarients.animate
+        }
+        transition={loginCardTRansitions}
       >
-        <motion.div className="absolute top-0 left-0 w-full h-full z-50 bg-white"
-        animate={{
-          opacity: 0,
-          display: "none"
-        }}
-        transition={{duration: 0.3, delay: 0.5}}
+        <motion.div
+          className="login-hiding-card"
+          variants={loginHidingCardVarients}
+          animate={loginHidingCardVarients.animate}
+          transition={loginHidingCardTransition}
         ></motion.div>
         <div
-          className={`text-[42px] font-extralight text-center p-4 transition-colors duration-300 
+          className={`login-title
         ${isChecked === "wrong" ? "text-[#EF4444]" : "text-[#3B82F6]"} `}
         >
           Task Manager
@@ -86,7 +74,7 @@ export const Login = () => {
           value={password}
           onChange={handleChange}
         />
-
+        <div className="w-full text-end text-[#3B82F6] text-sm font-medium mt-1">Forgot Password ?</div>
         <motion.button
           onClick={handleSubmit}
           className={`w-full text-base my transition-colors text-white p-2 font-semibold text-center rounded
@@ -129,10 +117,10 @@ export const Login = () => {
             },
           }}
         >
-          <div className="border-t border-[#E5E7EB] w-full h-[1px] my-7"></div>
+          <div className="border-t border-[#E5E7EB] w-full h-[1px] mt-12 mb-4"></div>
           <button
             type="button"
-            className="text-white w-full transition-colors bg-[#3b5998] hover:bg-[#3b5998]/90 outline-none font-medium rounded text-sm px-5 py-2.5 flex justify-center mb-4"
+            className="text-white w-full transition-colors bg-[#3b5998] hover:bg-[#3b5998]/90 outline-none font-medium rounded text-sm px-5 py-2.5 flex justify-center mb-2"
           >
             <svg
               className="w-4 h-4 me-2"
@@ -176,7 +164,7 @@ export const Login = () => {
           }`}
         >
           <motion.div
-            className="w-full h-full flex justify-center items-center"
+            className="center"
             animate={{
               opacity: isChecked === "true" ? 1 : 0,
               backgroundColor: "#34D399",
@@ -212,29 +200,26 @@ export const Login = () => {
       </motion.div>
       <div className="absolute right-52">
         <motion.div
-          className="relative text-[64px] font-extralight text-[#3B82F6] transition-colors duration-700"
-          initial={{ opacity: 0, display: "none", }}
-          animate={{
-            opacity: isChecked === "true" ? 1 : 0,
-            color: isChecked === "true" ? "grey" : "#3B82F6",
-            display: isChecked === "true" ? "inline" : "none",
-          }}
-          transition={{
-            opacity: { duration: 0.2, delay: 0.8 },
-            color: { duration: 1, delay: 1.3, ease: "linear" },
-          }}
+          className="login-successful-message"
+          variants={loginSuccessfulMessageVarients}
+          initial={loginSuccessfulMessageVarients.initial}
+          animate={
+            isChecked === "true"
+              ? loginSuccessfulMessageVarients.animateTrue
+              : loginSuccessfulMessageVarients.animate
+          }
+          transition={loginSuccessfulMessageTransition}
         >
           Logged In Successfully
           <motion.div
-            className="absolute top-1/2 translate-y-1/2 border-t-[3px] rounded w-full h-[1px] transition-colors duration-700"
-            animate={{
-              width: isChecked === "true" ? `100%` : 0,
-              borderColor: isChecked === "true" ? "grey" : "#3B82F6",
-            }}
-            transition={{
-              width: { duration: 0.6, delay: 1.2 },
-              borderColor: { duration: 0.6, delay: 1.3, ease: "linear" },
-            }}
+            className="login-successful-message-stroke"
+            variants={loginSuccessfulMessageStrokeVarients}
+            animate={
+              isChecked === "true"
+                ? loginSuccessfulMessageStrokeVarients.animateTrue
+                : loginSuccessfulMessageStrokeVarients.animate
+            }
+            transition={loginSuccessfulMessageStrokeTransition}
           ></motion.div>
         </motion.div>
       </div>

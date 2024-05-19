@@ -16,10 +16,10 @@ export const Login = () => {
     setEmail(event.target.value);
   };
   const handleSubmit = () => {
-    setIsChecked("wrong");
+    setIsChecked("true");
     setTimeout(() => {
       setIsChecked("none");
-    }, 700);
+    }, 5000);
   };
   return (
     <div className="w-full h-screen flex justify-center items-center">
@@ -55,10 +55,16 @@ export const Login = () => {
             duration: 0.4,
             type: "spring",
             stiffness: 50,
-            //  delay: 0.5,
           },
         }}
       >
+        <motion.div className="absolute top-0 left-0 w-full h-full z-50 bg-white"
+        animate={{
+          opacity: 0,
+          display: "none"
+        }}
+        transition={{duration: 0.3, delay: 0.5}}
+        ></motion.div>
         <div
           className={`text-[42px] font-extralight text-center p-4 transition-colors duration-300 
         ${isChecked === "wrong" ? "text-[#EF4444]" : "text-[#3B82F6]"} `}
@@ -207,9 +213,11 @@ export const Login = () => {
       <div className="absolute right-52">
         <motion.div
           className="relative text-[64px] font-extralight text-[#3B82F6] transition-colors duration-700"
+          initial={{ opacity: 0, display: "none", }}
           animate={{
             opacity: isChecked === "true" ? 1 : 0,
             color: isChecked === "true" ? "grey" : "#3B82F6",
+            display: isChecked === "true" ? "inline" : "none",
           }}
           transition={{
             opacity: { duration: 0.2, delay: 0.8 },

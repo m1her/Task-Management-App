@@ -1,0 +1,16 @@
+@tailwind components;
+
+@layer components {
+  .input-tag {
+    @apply border
+    rounded
+    w-full
+    focus:ring
+    focus:ring-blue-200
+    focus:border-blue-200
+    p-2
+    !outline-none
+    text-base
+    border-[#cbcfd6];
+  }
+}

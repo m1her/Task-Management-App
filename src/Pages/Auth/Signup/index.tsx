@@ -1,54 +1,85 @@
-import React, { useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import "./style.css";
+import {
+  signupCheckPathTransition,
+  signupCheckPathVarients,
+  signupCheckVarients,
+} from "./animation";
+import { Input } from "../../../Components/Input";
+import { object } from "../../../utils/ValidateErrors";
 
 export const Signup = () => {
-  const [email, setEmail] = useState("asdasd");
-  const [password, setPassword] = useState("asdasd");
-  const [isSubmeted, setIsSubmeted] = useState("true");
+  const [signupData, setSignupData] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState<{ [k: string]: any }>({
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPassword(event.target.value);
-  };
-  const handleEmailChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setEmail(event.target.value);
+  const [isSubmeted, setIsSubmeted] = useState("none");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setSignupData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const submit = () => {
-    setIsSubmeted("true");
+  const validate = useCallback(() => {
+    const userSchema = object({
+      email: ["string", "required", "email"],
+      password: ["string", "required", "min=6"],
+    });
+    const result = userSchema.validate(signupData);
+    setErrors(result.errors);
     setTimeout(() => {
-      setIsSubmeted("none");
+      setErrors({
+        email: "",
+        password: "",
+      });
     }, 2000);
-  };
+    return result.valid;
+  }, [signupData]);
+
+  const signupAction = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault();
+      if (validate()) {
+        console.log(signupData);
+        setIsSubmeted("true");
+      }
+    },
+    [signupData, validate]
+  );
+
+  // useEffect(() => {
+  //   validate();
+  // }, [signupData, validate]);
+
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <div className="relative p-4 w-[400px] h-[400px] overflow-hidden border-2 rounded-md border-[#E5E7EB] shadow-[0_0_20px_-5px_rgba(0,0,0,0.2)] transition-colors duration-500 ease-in-out bg-white">
-        <div className="text-[42px] text-[#3B82F6] font-extralight text-center p-4 transition-colors duration-300">
-          Task Manager
-        </div>
-        <div>
-          <input
-            className="border rounded w-full focus:ring focus:ring-blue-200 focus:border-blue-200 p-2 text-base mt-4 border-[#cbcfd6] outline-none"
-            placeholder="My Email"
-            type="email"
-            onChange={handleEmailChange}
-            value={email}
-          />
-        </div>
+    <div className="signup-page-container">
+      <div className="signup-card">
+        <div className="signup-title">Task Manager</div>
         <div className="flex items-center gap-x-2 mt-4">
           <AnimatePresence>
             {isSubmeted === "true" && (
               <motion.div
                 key="modal"
-                className="h-[41.5px] aspect-square rounded flex justify-center items-center
-          bg-[#34D399]
-          "
-                initial={{ display: "none", opacity: 0, scale: 0.1 }}
-                animate={{ display: "flex", opacity: 1, scale: 1 }}
-                exit={{ display: "none", opacity: 0, scale: 0.1 }}
+                className="signup-checkbox"
+                variants={signupCheckVarients}
+                initial={signupCheckVarients.initial}
+                animate={signupCheckVarients.animate}
+                exit={signupCheckVarients.exit}
               >
                 <motion.svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,40 +93,87 @@ export const Signup = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="m4.5 12.75 6 6 9-13.5"
-                    initial={{ pathLength: 0 }}
-                    animate={{
-                      pathLength: isSubmeted === "true" ? 1 : 0,
-                      opacity: isSubmeted === "true" ? 1 : 0,
-                    }}
-                    transition={{
-                      duration: 0.6,
-                      ease: "easeInOut",
-                    }}
+                    variants={signupCheckPathVarients}
+                    initial={signupCheckPathVarients.initial}
+                    animate={
+                      isSubmeted === "true"
+                        ? signupCheckPathVarients.animateTrue
+                        : signupCheckPathVarients.animate
+                    }
+                    transition={signupCheckPathTransition}
                   />
                 </motion.svg>
               </motion.div>
             )}
 
-            <motion.input
-              className="border rounded w-full focus:ring focus:ring-blue-200 focus:border-blue-200 p-2 text-base border-[#cbcfd6] outline-none"
-              placeholder="My Password"
-              type="password"
-              value={password}
+            <Input
+              id="signup-email"
+              name="email"
+              type="email"
+              placeholder="My Email"
               onChange={handleChange}
+              value={signupData?.email}
+              error={errors?.email}
+              errorMsg={errors?.email}
+              autoFocus
             />
           </AnimatePresence>
         </div>
-        <button
-          className={`w-full text-base hover:bg-[#4e92ff] bg-[#3B82F6] mt-4 transition-colors text-white p-2 font-semibold text-center rounded duration-300 
-          `}
-          onClick={submit}
-        >
+        <div className="flex items-center gap-x-2 mt-4">
+          <AnimatePresence>
+            {isSubmeted === "true" && (
+              <motion.div
+                key="modal"
+                className="signup-checkbox"
+                variants={signupCheckVarients}
+                initial={signupCheckVarients.initial}
+                animate={signupCheckVarients.animate}
+                exit={signupCheckVarients.exit}
+              >
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="text-white w-8 h-8"
+                >
+                  <motion.path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m4.5 12.75 6 6 9-13.5"
+                    variants={signupCheckPathVarients}
+                    initial={signupCheckPathVarients.initial}
+                    animate={
+                      isSubmeted === "true"
+                        ? signupCheckPathVarients.animateTrue
+                        : signupCheckPathVarients.animate
+                    }
+                    transition={signupCheckPathTransition}
+                  />
+                </motion.svg>
+              </motion.div>
+            )}
+
+            <Input
+              id="signup-password"
+              name="password"
+              type="password"
+              placeholder="My Password"
+              value={signupData?.password}
+              onChange={handleChange}
+              error={errors?.password}
+              errorMsg={errors?.password}
+            />
+          </AnimatePresence>
+        </div>
+        <button className="signup-submit-button" onClick={signupAction}>
           Signup
         </button>
         <div className="text-sm font-medium mt-1">
           Already have an account? <span className="text-[#3B82F6]">Login</span>
         </div>
-        <div className="border-t border-[#E5E7EB] w-full h-[1px] my-4"></div>
+        <div className="signup-divider"></div>
         <div className="flex gap-x-8">
           <button
             type="button"
@@ -109,9 +187,9 @@ export const Signup = () => {
               viewBox="0 0 8 19"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
           </button>
@@ -127,9 +205,9 @@ export const Signup = () => {
               viewBox="0 0 18 19"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
           </button>

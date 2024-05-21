@@ -14,7 +14,7 @@
     @apply text-[42px] text-[#3B82F6] font-extralight text-center p-4;
   }
   .signup-submit-button {
-    @apply w-full text-base hover:bg-[#4e92ff] bg-[#3B82F6] mt-4 transition-colors text-white p-2 font-semibold text-center rounded duration-300;
+    @apply w-full flex justify-center items-center text-base hover:bg-[#4e92ff] bg-[#3B82F6] mt-4 transition-colors text-white p-2 font-semibold text-center rounded duration-300;
   }
   .signup-checkbox {
     @apply h-[41.5px] aspect-square rounded flex justify-center items-center bg-[#34D399];
@@ -22,4 +22,7 @@
   .signup-divider {
     @apply border-t border-[#E5E7EB] w-full h-[1px] my-4;
   }
+  
 }
+
+

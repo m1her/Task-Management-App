@@ -9,7 +9,12 @@ import {
 import { Input } from "../../../Components/Input";
 import { object } from "../../../utils/ValidateErrors";
 import { auth } from "../../../Firebase/firebase-config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  FacebookAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
   const [signupData, setSignupData] = useState({
@@ -23,7 +28,8 @@ export const Signup = () => {
 
   const [isSubmeted, setIsSubmeted] = useState("none");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [buttonIsDisabled, setButtonIsDisabled] = useState(false);
+  const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setSignupData((prev) => ({
@@ -39,11 +45,13 @@ export const Signup = () => {
     });
     const result = userSchema.validate(signupData);
     setErrors(result.errors);
+    setButtonIsDisabled(true);
     setTimeout(() => {
       setErrors({
         email: "",
         password: "",
       });
+      setButtonIsDisabled(false);
     }, 2000);
     return result.valid;
   }, [signupData]);
@@ -53,7 +61,7 @@ export const Signup = () => {
       event.preventDefault();
       if (validate()) {
         setIsLoading(true);
-
+        setButtonIsDisabled(true);
         createUserWithEmailAndPassword(
           auth,
           signupData.email,
@@ -62,14 +70,18 @@ export const Signup = () => {
           .then(() => {
             setIsSubmeted("true");
             setIsLoading(false);
+            setTimeout(() => {
+              navigate("/login");
+            }, 1000);
           })
           .catch((err) => {
             handleFirebaseError(err);
             setIsLoading(false);
+            setButtonIsDisabled(false);
           });
       }
     },
-    [signupData, validate]
+    [navigate, signupData.email, signupData.password, validate]
   );
 
   const handleFirebaseError = (err: any) => {
@@ -97,6 +109,10 @@ export const Signup = () => {
     setErrors({ email: errorMessage, password: "" });
   };
 
+  const facebockSignup = () => {
+    const facebockProvider = new FacebookAuthProvider();
+    signInWithPopup(auth, facebockProvider);
+  };
 
   return (
     <div className="signup-page-container">
@@ -199,7 +215,11 @@ export const Signup = () => {
             />
           </AnimatePresence>
         </div>
-        <button className="signup-submit-button" onClick={signupAction}>
+        <button
+          className="signup-submit-button"
+          onClick={signupAction}
+          disabled={buttonIsDisabled}
+        >
           {isLoading ? (
             <div role="status">
               <svg
@@ -224,13 +244,20 @@ export const Signup = () => {
           )}
         </button>
         <div className="text-sm font-medium mt-1">
-          Already have an account? <span className="text-[#3B82F6]">Login</span>
+          Already have an account?{" "}
+          <a
+            href="/login"
+            className="text-[#3B82F6] hover:underline hover:text-[#4e92ff]"
+          >
+            Login
+          </a>
         </div>
         <div className="signup-divider"></div>
         <div className="flex gap-x-8">
           <button
             type="button"
             className="text-white w-full transition-colors bg-[#3b5998] hover:bg-[#3b5998]/90 outline-none font-medium rounded text-sm p-3 flex items-center justify-center"
+            onClick={facebockSignup}
           >
             <svg
               className="w-4 h-4 me-2"

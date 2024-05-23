@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap');
+
 body {
   background: #F3F4F6; 
+  font-family: "Reddit Mono", monospace;
 }
 
 .center {

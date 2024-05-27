@@ -8,13 +8,14 @@ import {
 } from "./animation";
 import { Input } from "../../../Components/Input";
 import { object } from "../../../utils/ValidateErrors";
-import { auth } from "../../../Firebase/firebase-config";
+import { auth, db } from "../../../Firebase/firebase-config";
 import {
   FacebookAuthProvider,
   createUserWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 export const Signup = () => {
   const [signupData, setSignupData] = useState({
@@ -70,6 +71,9 @@ export const Signup = () => {
           .then(() => {
             setIsSubmeted("true");
             setIsLoading(false);
+            const docRef = doc(db, signupData.email, "empty");
+            setDoc(docRef, {});
+            // addDoc(collection(db, signupData.email), {});
             setTimeout(() => {
               navigate("/login");
             }, 1000);

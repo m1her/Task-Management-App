@@ -1,0 +1,63 @@
+@tailwind components;
+
+@layer components {
+  .dash-title {
+    @apply text-[#3B82F6]
+    text-3xl
+    font-light
+    p-4
+    text-center;
+  }
+
+  .dash-grid {
+    @apply grid
+    grid-cols-3
+    py-12
+    px-40
+    gap-12;
+  }
+
+  .dash-piller-container {
+    @apply flex
+    justify-center
+    flex-col;
+  }
+
+  .dash-piller {
+    @apply w-full
+    h-full
+    relative
+    min-h-96
+    bg-white/50
+    rounded-md
+    shadow;
+  }
+
+  .dash-drag-toggeler {
+    @apply w-full
+    h-full
+    absolute
+    left-0
+    top-0
+    z-50
+    cursor-grab;
+  }
+
+  .dash-piller-title {
+    @apply text-lg
+    font-light
+    text-center
+    rounded-t-md
+    bg-white
+    w-full
+    border-b
+    py-3;
+  }
+
+  .dash-reorder {
+    @apply flex
+    flex-col
+    gap-y-2
+    p-4;
+  }
+}

@@ -13,4 +13,31 @@
     text-base
     border-[#cbcfd6];
   }
+  .input-error {
+    @apply absolute
+    top-0
+    left-0
+    w-full
+    text-[#EF4444]
+    bg-[#f29c9c]
+    h-[42px]
+    rounded
+    flex
+    items-center
+    gap-x-2
+    pl-2;
+  }
+  .input-error-icon {
+    @apply w-4
+    h-4
+    text-white
+    bg-[#EF4444]
+    rounded-full;
+  }
+
+  .input-error-text {
+    @apply text-sm
+    font-medium
+    mb-0.5;
+  }
 }

@@ -2,21 +2,145 @@
 
 @layer components {
   .login-page-container {
-    @apply w-full h-screen flex justify-center items-center;
+    @apply w-full
+    h-screen
+    flex
+    justify-center
+    items-center;
   }
+
   .login-card {
-    @apply relative p-4 w-[400px] h-[400px] overflow-hidden border-2 rounded-md border-[#E5E7EB] shadow-[0_0_20px_-5px_rgba(0,0,0,0.2)] transition-colors duration-500 ease-in-out;
+    @apply relative
+    p-4
+    w-[400px]
+    h-[400px]
+    overflow-hidden
+    border-2
+    rounded-md
+    border-[#E5E7EB]
+    shadow-[0_0_20px_-5px_rgba(0,0,0,0.2)]
+    transition-colors
+    duration-500
+    ease-in-out;
   }
+
   .login-hiding-card {
-    @apply absolute top-0 left-0 w-full h-full z-50 bg-white;
+    @apply absolute
+    top-0
+    left-0
+    w-full
+    h-full
+    z-50
+    bg-white;
   }
+
   .login-title {
-    @apply text-[42px] font-extralight text-center p-4 transition-colors duration-300;
+    @apply text-[42px]
+    font-extralight
+    text-center
+    p-4
+    transition-colors
+    duration-300;
   }
+
   .login-successful-message {
-    @apply relative text-[64px] font-extralight text-[#3B82F6] transition-colors duration-700;
+    @apply relative
+    text-[64px]
+    font-extralight
+    text-[#3B82F6]
+    transition-colors
+    duration-700;
   }
+
   .login-successful-message-stroke {
-    @apply absolute top-1/2 translate-y-1/2 border-t-[3px] rounded w-full h-[1px] transition-colors duration-700
+    @apply absolute
+    top-1/2
+    translate-y-1/2
+    border-t-[3px]
+    rounded
+    w-full
+    h-[1px]
+    transition-colors
+    duration-700;
+  }
+
+  .login-google-btn {
+    @apply text-white
+    transition-colors
+    bg-[#4285F4]
+    hover:bg-[#4285F4]/90
+    outline-none
+    font-medium
+    rounded
+    text-sm
+    px-5
+    py-2.5
+    flex
+    justify-center
+    w-full;
+  }
+
+  .login-facebook-btn {
+    @apply text-white
+    w-full
+    transition-colors
+    bg-[#3b5998]
+    hover:bg-[#3b5998]/90
+    outline-none
+    font-medium
+    rounded
+    text-sm
+    px-5
+    py-2.5
+    flex
+    justify-center
+    mb-2;
+  }
+
+  .login-divider {
+    @apply border-t
+    border-[#E5E7EB]
+    w-full
+    h-[1px]
+    mt-12
+    mb-4;
+  }
+
+  .login-loading {
+    @apply w-[24px]
+    h-[24px]
+    text-[#ffffff52]
+    animate-spin
+    fill-white;
+  }
+
+  .login-btn {
+    @apply w-full
+    text-base
+    text-white
+    p-2
+    font-semibold
+    text-center
+    rounded
+    transition-colors
+    duration-300;
+  }
+
+  .login-links {
+    @apply hover:underline
+    hover:text-[#4e92ff]
+    text-[#3B82F6]
+    text-sm
+    font-medium
+    mt-1;
+  }
+
+  .login-links-container {
+    @apply w-full
+    flex
+    justify-between
+    z-30
+    absolute
+    pr-8;
   }
 }

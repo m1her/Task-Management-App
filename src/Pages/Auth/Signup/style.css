@@ -5,21 +5,112 @@
     @apply w-full h-screen flex justify-center items-center;
   }
   .signup-card {
-    @apply relative p-4 w-[400px] h-[400px] overflow-hidden border-2 rounded-md border-[#E5E7EB] shadow-[0_0_20px_-5px_rgba(0,0,0,0.2)] transition-colors duration-500 ease-in-out bg-white;
+    @apply relative
+    p-4
+    w-[400px]
+    h-[400px]
+    overflow-hidden
+    border-2
+    rounded-md
+    border-[#E5E7EB]
+    shadow-[0_0_20px_-5px_rgba(0,0,0,0.2)]
+    transition-colors
+    duration-500
+    ease-in-out
+    bg-white;
   }
   .signup-hiding-card {
-    @apply absolute top-0 left-0 w-full h-full z-50 bg-white;
+    @apply absolute
+    top-0
+    left-0
+    w-full
+    h-full
+    z-50
+    bg-white;
   }
   .signup-title {
-    @apply text-[42px] text-[#3B82F6] font-extralight text-center p-4;
+    @apply text-[42px]
+    text-[#3B82F6]
+    font-extralight
+    text-center
+    p-4;
   }
   .signup-submit-button {
-    @apply w-full cursor-pointer flex justify-center items-center text-base hover:bg-[#4e92ff] bg-[#3B82F6] mt-4 transition-colors text-white p-2 font-semibold text-center rounded duration-300;
+    @apply w-full
+    cursor-pointer
+    flex
+    justify-center
+    items-center
+    text-base
+    hover:bg-[#4e92ff]
+    bg-[#3B82F6]
+    mt-4
+    transition-colors
+    text-white
+    p-2
+    font-semibold
+    text-center
+    rounded
+    duration-300;
   }
   .signup-checkbox {
-    @apply h-[41.5px] aspect-square rounded flex justify-center items-center bg-[#34D399];
+    @apply h-[41.5px]
+    aspect-square
+    rounded
+    flex
+    justify-center
+    items-center
+    bg-[#34D399];
   }
   .signup-divider {
-    @apply border-t border-[#E5E7EB] w-full h-[1px] my-4;
+    @apply border-t
+    border-[#E5E7EB]
+    w-full
+    h-[1px]
+    my-4;
+  }
+  .signup-facebook-btn {
+    @apply text-white
+    w-full
+    transition-colors
+    bg-[#3b5998]
+    hover:bg-[#3b5998]/90
+    outline-none
+    font-medium
+    rounded
+    text-sm
+    p-3
+    flex
+    items-center
+    justify-center;
+  }
+
+  .signup-google-btn {
+    @apply text-white
+    transition-colors
+    bg-[#4285F4]
+    hover:bg-[#4285F4]/90
+    outline-none
+    rounded
+    p-3
+    flex
+    justify-center
+    items-center
+    w-full;
+  }
+
+  .signup-login-link {
+    @apply text-[#3B82F6]
+    hover:underline
+    hover:text-[#4e92ff]
+    cursor-pointer;
+  }
+
+  .signup-loading {
+    @apply w-[24px]
+    h-[24px]
+    text-[#ffffff52]
+    animate-spin
+    fill-white;
   }
 }

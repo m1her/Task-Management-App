@@ -72,7 +72,7 @@ export const Login = () => {
           });
       }
     },
-    [loginData.email, loginData.password, validate]
+    [loginData.email, loginData.password, navigate, validate]
   );
 
   return (
@@ -125,28 +125,22 @@ export const Login = () => {
           />
         </div>
 
-        <div className="w-full flex justify-between z-30 absolute pr-8">
-          <a
-            href="/signup"
-            className=" hover:underline hover:text-[#4e92ff] text-[#3B82F6] text-sm font-medium mt-1"
-          >
+        <div className="login-links-container">
+          <a href="/signup" className=" login-links">
             Register
           </a>
-          <a
-            href="/"
-            className="hover:underline hover:text-[#4e92ff] text-[#3B82F6] text-sm font-medium mt-1"
-          >
+          <a href="/" className="login-links">
             Forgot Password ?
           </a>
         </div>
         <motion.button
           onClick={loginAction}
-          className={`w-full text-base my transition-colors text-white p-2 font-semibold text-center rounded
+          className={`login-btn
           ${
             isChecked === "wrong"
               ? "bg-[#EF4444]"
               : "bg-[#3B82F6] hover:bg-[#4e92ff]"
-          } transition-colors duration-300 
+          } 
           `}
           initial={{ display: "none", opacity: 0 }}
           animate={{
@@ -170,7 +164,7 @@ export const Login = () => {
             >
               <svg
                 aria-hidden="true"
-                className="w-[24px] h-[24px] text-[#ffffff52] animate-spin fill-white"
+                className="login-loading"
                 viewBox="0 0 100 100"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -205,11 +199,8 @@ export const Login = () => {
             },
           }}
         >
-          <div className="border-t border-[#E5E7EB] w-full h-[1px] mt-12 mb-4"></div>
-          <button
-            type="button"
-            className="text-white w-full transition-colors bg-[#3b5998] hover:bg-[#3b5998]/90 outline-none font-medium rounded text-sm px-5 py-2.5 flex justify-center mb-2"
-          >
+          <div className="login-divider"></div>
+          <button type="button" className="login-facebook-btn">
             <svg
               className="w-4 h-4 me-2"
               aria-hidden="true"
@@ -225,10 +216,7 @@ export const Login = () => {
             </svg>
             Sign in with Facebook
           </button>
-          <button
-            type="button"
-            className="text-white transition-colors bg-[#4285F4] hover:bg-[#4285F4]/90 outline-none font-medium rounded text-sm px-5 py-2.5 flex justify-center w-full"
-          >
+          <button type="button" className="login-google-btn">
             <svg
               className="w-4 h-4 me-2"
               aria-hidden="true"

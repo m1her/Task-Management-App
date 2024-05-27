@@ -1,0 +1,43 @@
+@tailwind components;
+
+@layer components {
+  .task-card {
+    @apply bg-white
+    cursor-grab
+    rounded-lg
+    shadow-sm
+    p-4
+    relative
+    overflow-hidden
+    select-none;
+  }
+
+  .task-title {
+    @apply text-black
+    text-lg
+    font-semibold;
+  }
+
+  .task-status {
+    @apply flex
+    justify-center
+    items-center
+    px-2
+    rounded-full
+    text-sm
+    font-medium;
+  }
+
+  .task-description {
+    @apply font-light
+    mt-2
+    text-[#4B5563];
+  }
+
+  .task-time {
+    @apply text-xs
+    mt-4
+    text-[#616c7c]
+    text-end;
+  }
+}

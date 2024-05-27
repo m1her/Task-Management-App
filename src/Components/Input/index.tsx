@@ -52,10 +52,10 @@ export const Input = ({
         defaultValue={defaultValue}
         maxLength={maxLength}
       />
-        <AnimatePresence>
-      {error && (
+      <AnimatePresence>
+        {error && (
           <motion.div
-            className="absolute top-0 left-0 w-full text-[#EF4444] bg-[#f29c9c] h-[42px] rounded flex items-center gap-x-2 pl-2"
+            className="input-error"
             key="inputError"
             initial={{ y: 41 }}
             animate={{ y: 0 }}
@@ -63,12 +63,12 @@ export const Input = ({
             transition={{ ease: "linear" }}
           >
             <FontAwesomeIcon
-              className="w-4 h-4 text-white bg-[#EF4444] rounded-full"
+              className="input-error-icon"
               icon={faCircleXmark}
             />
-            <span className="text-sm font-medium mb-0.5">{errorMsg}</span>
+            <span className="input-error-text">{errorMsg}</span>
           </motion.div>
-      )}
+        )}
       </AnimatePresence>
     </div>
   );

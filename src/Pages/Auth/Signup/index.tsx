@@ -224,7 +224,7 @@ export const Signup = () => {
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-[24px] h-[24px] text-[#ffffff52] animate-spin fill-white"
+                className="signup-loading"
                 viewBox="0 0 100 100"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -245,10 +245,7 @@ export const Signup = () => {
         </button>
         <div className="text-sm font-medium mt-1">
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-[#3B82F6] hover:underline hover:text-[#4e92ff]"
-          >
+          <a href="/login" className="signup-login-link">
             Login
           </a>
         </div>
@@ -256,7 +253,7 @@ export const Signup = () => {
         <div className="flex gap-x-8">
           <button
             type="button"
-            className="text-white w-full transition-colors bg-[#3b5998] hover:bg-[#3b5998]/90 outline-none font-medium rounded text-sm p-3 flex items-center justify-center"
+            className="signup-facebook-btn"
             onClick={facebockSignup}
           >
             <svg
@@ -273,10 +270,7 @@ export const Signup = () => {
               />
             </svg>
           </button>
-          <button
-            type="button"
-            className="text-white transition-colors bg-[#4285F4] hover:bg-[#4285F4]/90 outline-none rounded p-3 flex justify-center items-center w-full"
-          >
+          <button type="button" className="signup-google-btn">
             <svg
               className="w-4 h-4 me-2"
               aria-hidden="true"

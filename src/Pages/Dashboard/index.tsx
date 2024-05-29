@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Task } from "../../Components/Task";
 import "./style.css";
-import { Reorder } from "framer-motion";
+import { AnimatePresence, Reorder } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../Firebase/firebase-config";
 import {
@@ -13,6 +13,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { Input } from "../../Components/Input";
+import { AddTask } from "../../Components/AddTask";
 
 export const Dashboard = () => {
   const [user] = useAuthState(auth);
@@ -21,6 +23,7 @@ export const Dashboard = () => {
   const [toDo, setToDo] = useState<any>([]);
   const [inProgress, setInProgress] = useState<any>([]);
   const [done, setDone] = useState<any>([]);
+  const [addTaskToggler, setAddTaskToggler] = useState<boolean>(false);
 
   const [selectedTask, setSelectedTask] = useState<any>({});
   const [dragToggler, setDragToggler] = useState(false);
@@ -88,15 +91,17 @@ export const Dashboard = () => {
   };
 
   const addTaskHandler = () => {
-    if (user) {
-      addDoc(collection(db, user.email || ""), {
-        id: Math.random(),
-        title: "task 2",
-        description: "asdasdasda asdasd asda sdas d",
-        due: "10:30am | 25-3-2024",
-        status: "to-do",
-      });
-    }
+    setAddTaskToggler(true);
+    document.body.classList.add('overflow-hidden');
+    // if (user) {
+    //   addDoc(collection(db, user.email || ""), {
+    //     id: Math.random(),
+    //     title: "task 2",
+    //     description: "asdasdasda asdasd asda sdas d",
+    //     due: "10:30am | 25-3-2024",
+    //     status: "to-do",
+    //   });
+    // }
   };
   useEffect(() => {
     if (user) {
@@ -136,7 +141,7 @@ export const Dashboard = () => {
   }, [done, inProgress, toDo]);
 
   return (
-    <div>
+    <div className={`${addTaskToggler ? "overflow-hidden " : "inline "}`}>
       <nav className="dash-title">Task Manager</nav>
       <div className="w-full flex justify-center items-center">
         <div
@@ -255,6 +260,9 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
+      <AnimatePresence>
+        {addTaskToggler && <AddTask setAddTaskToggler={setAddTaskToggler} />}
+      </AnimatePresence>
     </div>
   );
 };

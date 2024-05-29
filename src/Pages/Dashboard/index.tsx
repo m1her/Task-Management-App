@@ -28,24 +28,13 @@ export const Dashboard = () => {
   const onMouseDown = (id: number) => {
     const selected = tasks.find((task: { id: number }) => task.id === id);
     setSelectedTask(selected);
+    console.log(selected);
+
     setDragToggler(true);
   };
 
   const onMouseUp = async () => {
     if (selectedTask.status !== statusFlag) {
-      if (statusFlag === "to-do") {
-        setToDo((prev: any) => [...prev, { ...selectedTask, status: "to-do" }]);
-      }
-      if (statusFlag === "in-progress") {
-        setInProgress((prev: any) => [
-          ...prev,
-          { ...selectedTask, status: "in-progress" },
-        ]);
-      }
-      if (statusFlag === "done") {
-        setDone((prev: any) => [...prev, { ...selectedTask, status: "done" }]);
-        console.log(done);
-      }
       if (selectedTask?.status === "to-do") {
         setToDo((prev: any) =>
           prev.filter((task: any) => task.id !== selectedTask.id)
@@ -61,6 +50,23 @@ export const Dashboard = () => {
           prev.filter((task: any) => task.id !== selectedTask.id)
         );
       }
+      if (statusFlag === "to-do") {
+        setToDo((prev: any) => [...prev, { ...selectedTask, status: "to-do" }]);
+      }
+      if (statusFlag === "in-progress") {
+        setInProgress((prev: any) => [
+          ...prev,
+          { ...selectedTask, status: "in-progress" },
+        ]);
+      }
+      if (statusFlag === "done") {
+        setDone((prev: any) => [...prev, { ...selectedTask, status: "done" }]);
+      }
+      setTasks((prevTasks: any[]) =>
+        prevTasks.map((task) =>
+          task.id === selectedTask.id ? { ...task, status: statusFlag } : task
+        )
+      );
     }
 
     if (user) {
@@ -123,6 +129,12 @@ export const Dashboard = () => {
     }
   }, [tasks]);
 
+  useEffect(() => {
+    console.log(toDo);
+    console.log(inProgress);
+    console.log(done);
+  }, [done, inProgress, toDo]);
+
   return (
     <div>
       <nav className="dash-title">Task Manager</nav>
@@ -164,7 +176,7 @@ export const Dashboard = () => {
                       onDragEnd={onMouseUp}
                       onDragStart={() => onMouseDown(task.id)}
                     >
-                      <Task key={task.id} id={task.id} />
+                      <Task key={task.id} id={task.id} status="To Do" />
                     </Reorder.Item>
                   ))}
               </Reorder.Group>
@@ -201,7 +213,7 @@ export const Dashboard = () => {
                       onDragEnd={onMouseUp}
                       onDragStart={() => onMouseDown(task.id)}
                     >
-                      <Task key={task.id} id={task.id} />
+                      <Task key={task.id} id={task.id} status="In Progress" />
                     </Reorder.Item>
                   ))}
               </Reorder.Group>
@@ -236,7 +248,7 @@ export const Dashboard = () => {
                     onDragEnd={onMouseUp}
                     onDragStart={() => onMouseDown(task.id)}
                   >
-                    <Task key={task.id} id={task.id} />
+                    <Task key={task.id} id={task.id} status="Done" />
                   </Reorder.Item>
                 ))}
             </Reorder.Group>

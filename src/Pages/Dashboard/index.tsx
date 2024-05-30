@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Task } from "../../Components/Task";
 import "./style.css";
-import { Reorder } from "framer-motion";
+import { AnimatePresence, Reorder } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../Firebase/firebase-config";
 import {
@@ -13,14 +13,20 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { Input } from "../../Components/Input";
+import { AddTask } from "../../Components/AddTask";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export const Dashboard = () => {
   const [user] = useAuthState(auth);
   const [statusFlag, setstatusFlag] = useState("");
+  const [crudFlag, setCrudFlag] = useState("");
   const [tasks, setTasks] = useState<any>();
   const [toDo, setToDo] = useState<any>([]);
   const [inProgress, setInProgress] = useState<any>([]);
   const [done, setDone] = useState<any>([]);
+  const [addTaskToggler, setAddTaskToggler] = useState<boolean>(false);
 
   const [selectedTask, setSelectedTask] = useState<any>({});
   const [dragToggler, setDragToggler] = useState(false);
@@ -85,18 +91,21 @@ export const Dashboard = () => {
       }
     }
     setDragToggler(false);
+    setSelectedTask({});
   };
 
   const addTaskHandler = () => {
-    if (user) {
-      addDoc(collection(db, user.email || ""), {
-        id: Math.random(),
-        title: "task 2",
-        description: "asdasdasda asdasd asda sdas d",
-        due: "10:30am | 25-3-2024",
-        status: "to-do",
-      });
-    }
+    setAddTaskToggler(true);
+    document.body.classList.add("overflow-hidden");
+    // if (user) {
+    //   addDoc(collection(db, user.email || ""), {
+    //     id: Math.random(),
+    //     title: "task 2",
+    //     description: "asdasdasda asdasd asda sdas d",
+    //     due: "10:30am | 25-3-2024",
+    //     status: "to-do",
+    //   });
+    // }
   };
   useEffect(() => {
     if (user) {
@@ -136,11 +145,11 @@ export const Dashboard = () => {
   }, [done, inProgress, toDo]);
 
   return (
-    <div>
+    <div className={`${addTaskToggler ? "overflow-hidden " : "inline "}`}>
       <nav className="dash-title">Task Manager</nav>
       <div className="w-full flex justify-center items-center">
         <div
-          className="text-lg font-semibold bg-[rgb(59,130,246)] text-white flex justify-center items-center rounded py-1 px-12 cursor-pointer hover:bg-[rgb(70,139,251)] shadow-[0_0_7px_2px_rgba(59,130,246,0.3)] hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)] transition-all "
+          className="text-lg font-semibold bg-[#3b82f6] text-white flex justify-center items-center rounded py-1 px-12 cursor-pointer hover:bg-[rgb(70,139,251)] shadow-[0_0_7px_2px_rgba(59,130,246,0.3)] hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)] transition-all "
           onClick={addTaskHandler}
         >
           Add Task
@@ -154,6 +163,7 @@ export const Dashboard = () => {
               ${!dragToggler ? "hidden" : "inline"}
               `}
               onMouseOver={() => setstatusFlag("to-do")}
+              onMouseLeave={() => setstatusFlag(selectedTask.status)}
             ></div>
             <div className="dash-piller-title text-[#EF4444]">To Do</div>
 
@@ -176,7 +186,13 @@ export const Dashboard = () => {
                       onDragEnd={onMouseUp}
                       onDragStart={() => onMouseDown(task.id)}
                     >
-                      <Task key={task.id} id={task.id} status="To Do" />
+                      <Task
+                        key={task.id}
+                        id={task.id}
+                        status="To Do"
+                        crudFlag={crudFlag}
+                        isSelected={selectedTask.id === task.id}
+                      />
                     </Reorder.Item>
                   ))}
               </Reorder.Group>
@@ -190,6 +206,7 @@ export const Dashboard = () => {
                ${!dragToggler ? "hidden" : "inline"}
                `}
               onMouseOver={() => setstatusFlag("in-progress")}
+              onMouseLeave={() => setstatusFlag(selectedTask.status)}
             ></div>
             <div className="dash-piller-title text-[#FBBF24]">In Progress</div>
             {inProgress && (
@@ -213,7 +230,13 @@ export const Dashboard = () => {
                       onDragEnd={onMouseUp}
                       onDragStart={() => onMouseDown(task.id)}
                     >
-                      <Task key={task.id} id={task.id} status="In Progress" />
+                      <Task
+                        key={task.id}
+                        id={task.id}
+                        status="In Progress"
+                        crudFlag={crudFlag}
+                        isSelected={selectedTask.id === task.id}
+                      />
                     </Reorder.Item>
                   ))}
               </Reorder.Group>
@@ -227,6 +250,7 @@ export const Dashboard = () => {
                 !dragToggler ? "hidden" : "inline"
               }`}
               onMouseOver={() => setstatusFlag("done")}
+              onMouseLeave={() => setstatusFlag(selectedTask.status)}
             ></div>
             <div className="dash-piller-title text-[#34D399]">Done</div>
 
@@ -248,11 +272,38 @@ export const Dashboard = () => {
                     onDragEnd={onMouseUp}
                     onDragStart={() => onMouseDown(task.id)}
                   >
-                    <Task key={task.id} id={task.id} status="Done" />
+                    <Task
+                      key={task.id}
+                      id={task.id}
+                      status="Done"
+                      crudFlag={crudFlag}
+                      isSelected={selectedTask.id === task.id}
+                    />
                   </Reorder.Item>
                 ))}
             </Reorder.Group>
           </div>
+        </div>
+      </div>
+      <AnimatePresence>
+        {addTaskToggler && <AddTask setAddTaskToggler={setAddTaskToggler} />}
+      </AnimatePresence>
+      <div className="fixed w-full flex justify-between gap-x-4 top-0 left-0 p-8 z-50">
+        <div className="bg-[#EF4444]/40 text-[#EF4444] relative text-xl w-12 rounded aspect-square flex justify-center items-center">
+          <FontAwesomeIcon icon={faTrashCan} />
+          <div
+            className="w-32 aspect-square absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 z-50 cursor-grab"
+            onMouseOver={() => setCrudFlag("delete")}
+            onMouseLeave={() => setCrudFlag("")}
+          ></div>
+        </div>
+        <div className="bg-[#3b82f6]/40 text-[#3b82f6] relative text-xl w-12 rounded aspect-square flex justify-center items-center">
+          <FontAwesomeIcon icon={faEdit} />
+          <div
+            className="w-32 aspect-square absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 z-50 cursor-grab"
+            onMouseOver={() => setCrudFlag("edit")}
+            onMouseLeave={() => setCrudFlag("")}
+          ></div>
         </div>
       </div>
     </div>

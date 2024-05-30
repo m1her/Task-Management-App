@@ -5,11 +5,23 @@ import "./style.css";
 interface taskTypes {
   id: number;
   status: string;
+  crudFlag: string;
+  isSelected: boolean;
 }
 
-export const Task = ({ id, status }: taskTypes) => {
+export const Task = ({ id, status, crudFlag, isSelected }: taskTypes) => {
   return (
-    <motion.div className="task-card">
+    <motion.div
+      className={`task-card transition-all
+    ${
+      crudFlag === "delete" && isSelected === true
+        ? "scale-50 !bg-[#ef4444]/60"
+        : crudFlag === "edit" && isSelected === true
+        ? "scale-50 !bg-[#3b82f6]/60"
+        : "scale-100"
+    }
+    `}
+    >
       {status === "Done" && (
         <svg
           className="absolute w-full left-0 top-0 scale-x-[-1]"

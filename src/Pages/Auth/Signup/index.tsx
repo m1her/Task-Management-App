@@ -11,6 +11,7 @@ import { object } from "../../../utils/ValidateErrors";
 import { auth, db } from "../../../Firebase/firebase-config";
 import {
   FacebookAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -116,6 +117,14 @@ export const Signup = () => {
   const facebockSignup = () => {
     const facebockProvider = new FacebookAuthProvider();
     signInWithPopup(auth, facebockProvider);
+  };
+
+  const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider).then((loggedUser) => {
+      const docRef = doc(db, loggedUser.user.email || "", "empty");
+      setDoc(docRef, {});
+    });
   };
 
   return (
@@ -274,7 +283,11 @@ export const Signup = () => {
               />
             </svg>
           </button>
-          <button type="button" className="signup-google-btn">
+          <button
+            type="button"
+            className="signup-google-btn"
+            onClick={googleSignIn}
+          >
             <svg
               className="w-4 h-4 me-2"
               aria-hidden="true"

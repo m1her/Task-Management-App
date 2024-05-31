@@ -17,11 +17,13 @@ import { Input } from "../../Components/Input";
 import { AddTask } from "../../Components/AddTask";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { EditTask } from "../../Components/EditTask";
 
 export const Dashboard = () => {
   const [user] = useAuthState(auth);
   const [statusFlag, setstatusFlag] = useState("");
   const [crudFlag, setCrudFlag] = useState("");
+  const [taskAddOrEdit, setTaskAddOrEdit] = useState("add");
   const [tasks, setTasks] = useState<any>();
   const [toDo, setToDo] = useState<any>([]);
   const [inProgress, setInProgress] = useState<any>([]);
@@ -34,12 +36,17 @@ export const Dashboard = () => {
   const onMouseDown = (id: number) => {
     const selected = tasks.find((task: { id: number }) => task.id === id);
     setSelectedTask(selected);
-    console.log(selected);
-
     setDragToggler(true);
   };
 
   const onMouseUp = async () => {
+    if (crudFlag === "edit") {
+      setAddTaskToggler(true);
+      setTaskAddOrEdit("edit");
+      console.log(selectedTask);
+    } else if (crudFlag === "delete") {
+      console.log("delete");
+    }
     if (selectedTask.status !== statusFlag) {
       if (selectedTask?.status === "to-do") {
         setToDo((prev: any) =>
@@ -147,9 +154,9 @@ export const Dashboard = () => {
   return (
     <div className={`${addTaskToggler ? "overflow-hidden " : "inline "}`}>
       <nav className="dash-title">Task Manager</nav>
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full flex justify-center items-center z-50">
         <div
-          className="text-lg font-semibold bg-[#3b82f6] text-white flex justify-center items-center rounded py-1 px-12 cursor-pointer hover:bg-[rgb(70,139,251)] shadow-[0_0_7px_2px_rgba(59,130,246,0.3)] hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)] transition-all "
+          className="text-lg font-semibold bg-[#3b82f6] text-white z-50 flex justify-center items-center rounded py-1 px-12 cursor-pointer hover:bg-[rgb(70,139,251)] shadow-[0_0_7px_2px_rgba(59,130,246,0.3)] hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)] transition-all "
           onClick={addTaskHandler}
         >
           Add Task
@@ -286,9 +293,19 @@ export const Dashboard = () => {
         </div>
       </div>
       <AnimatePresence>
-        {addTaskToggler && <AddTask setAddTaskToggler={setAddTaskToggler} />}
+        {addTaskToggler && taskAddOrEdit === "add" && (
+          <AddTask setAddTaskToggler={setAddTaskToggler} />
+        )}
       </AnimatePresence>
-      <div className="fixed w-full flex justify-between gap-x-4 top-0 left-0 p-8 z-50">
+      <AnimatePresence>
+        {addTaskToggler && taskAddOrEdit === "edit" && (
+          <EditTask
+            setEditTaskToggler={setAddTaskToggler}
+            task={selectedTask}
+          />
+        )}
+      </AnimatePresence>
+      <div className="fixed w-full flex justify-between gap-x-4 top-0 left-0 p-8 z-40">
         <div className="bg-[#EF4444]/40 text-[#EF4444] relative text-xl w-12 rounded aspect-square flex justify-center items-center">
           <FontAwesomeIcon icon={faTrashCan} />
           <div

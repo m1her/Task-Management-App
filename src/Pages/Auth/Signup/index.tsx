@@ -16,7 +16,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 export const Signup = () => {
   const [signupData, setSignupData] = useState({
@@ -121,10 +121,13 @@ export const Signup = () => {
 
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then((loggedUser) => {
-      const docRef = doc(db, loggedUser.user.email || "", "empty");
-      setDoc(docRef, {});
-    });
+    signInWithPopup(auth, provider)
+      .then((loggedUser) => {
+        const docRef = doc(db, loggedUser.user.email || "", "empty");
+        setDoc(docRef, {});
+      })
+      .then(() => navigate("/dashboard"))
+      .catch((err) => console.log(err));
   };
 
   return (

@@ -7,6 +7,7 @@ import { auth, db } from "../../Firebase/firebase-config";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -43,16 +44,7 @@ export const Dashboard = () => {
     if (crudFlag === "edit") {
       setAddTaskToggler(true);
       setTaskAddOrEdit("edit");
-      console.log(selectedTask);
     } else if (crudFlag === "delete") {
-      console.log("delete");
-    }
-    if (selectedTask.status !== statusFlag) {
-      if (selectedTask?.status === "to-do") {
-        setToDo((prev: any) =>
-          prev.filter((task: any) => task.id !== selectedTask.id)
-        );
-      }
       if (selectedTask?.status === "in-progress") {
         setInProgress((prev: any) =>
           prev.filter((task: any) => task.id !== selectedTask.id)
@@ -63,26 +55,11 @@ export const Dashboard = () => {
           prev.filter((task: any) => task.id !== selectedTask.id)
         );
       }
-      if (statusFlag === "to-do") {
-        setToDo((prev: any) => [...prev, { ...selectedTask, status: "to-do" }]);
+      if (selectedTask?.status === "to-do") {
+        setToDo((prev: any) =>
+          prev.filter((task: any) => task.id !== selectedTask.id)
+        );
       }
-      if (statusFlag === "in-progress") {
-        setInProgress((prev: any) => [
-          ...prev,
-          { ...selectedTask, status: "in-progress" },
-        ]);
-      }
-      if (statusFlag === "done") {
-        setDone((prev: any) => [...prev, { ...selectedTask, status: "done" }]);
-      }
-      setTasks((prevTasks: any[]) =>
-        prevTasks.map((task) =>
-          task.id === selectedTask.id ? { ...task, status: statusFlag } : task
-        )
-      );
-    }
-
-    if (user) {
       const q = query(
         collection(db, user?.email || ""),
         where("id", "==", selectedTask.id)
@@ -92,28 +69,75 @@ export const Dashboard = () => {
 
       if (querySnapshot) {
         const docRef = doc(db, user?.email || "", querySnapshot.docs[0].id);
-        // await updateDoc(docRef, {
-        //   status: statusFlag,
-        // });
+        deleteDoc(docRef);
       }
+    } else {
+      if (selectedTask.status !== statusFlag) {
+        if (selectedTask?.status === "to-do") {
+          setToDo((prev: any) =>
+            prev.filter((task: any) => task.id !== selectedTask.id)
+          );
+        }
+        if (selectedTask?.status === "in-progress") {
+          setInProgress((prev: any) =>
+            prev.filter((task: any) => task.id !== selectedTask.id)
+          );
+        }
+        if (selectedTask?.status === "done") {
+          setDone((prev: any) =>
+            prev.filter((task: any) => task.id !== selectedTask.id)
+          );
+        }
+        if (statusFlag === "to-do") {
+          setToDo((prev: any) => [
+            ...prev,
+            { ...selectedTask, status: "to-do" },
+          ]);
+        }
+        if (statusFlag === "in-progress") {
+          setInProgress((prev: any) => [
+            ...prev,
+            { ...selectedTask, status: "in-progress" },
+          ]);
+        }
+        if (statusFlag === "done") {
+          setDone((prev: any) => [
+            ...prev,
+            { ...selectedTask, status: "done" },
+          ]);
+        }
+        setTasks((prevTasks: any[]) =>
+          prevTasks.map((task) =>
+            task.id === selectedTask.id ? { ...task, status: statusFlag } : task
+          )
+        );
+      }
+
+      if (user) {
+        const q = query(
+          collection(db, user?.email || ""),
+          where("id", "==", selectedTask.id)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot) {
+          const docRef = doc(db, user?.email || "", querySnapshot.docs[0].id);
+          await updateDoc(docRef, {
+            status: statusFlag,
+          });
+        }
+      }
+      setSelectedTask({});
     }
     setDragToggler(false);
-    setSelectedTask({});
   };
 
   const addTaskHandler = () => {
     setAddTaskToggler(true);
     document.body.classList.add("overflow-hidden");
-    // if (user) {
-    //   addDoc(collection(db, user.email || ""), {
-    //     id: Math.random(),
-    //     title: "task 2",
-    //     description: "asdasdasda asdasd asda sdas d",
-    //     due: "10:30am | 25-3-2024",
-    //     status: "to-do",
-    //   });
-    // }
   };
+
   useEffect(() => {
     if (user) {
       const fetchDocuments = async () => {
@@ -144,12 +168,6 @@ export const Dashboard = () => {
       );
     }
   }, [tasks]);
-
-  useEffect(() => {
-    console.log(toDo);
-    console.log(inProgress);
-    console.log(done);
-  }, [done, inProgress, toDo]);
 
   return (
     <div className={`${addTaskToggler ? "overflow-hidden " : "inline "}`}>
@@ -183,7 +201,7 @@ export const Dashboard = () => {
               >
                 {toDo
                   .filter((task: { status: string }) => task.status === "to-do")
-                  .map((task: { id: number }) => (
+                  .map((task: any) => (
                     <Reorder.Item
                       key={task.id}
                       value={task}
@@ -195,10 +213,10 @@ export const Dashboard = () => {
                     >
                       <Task
                         key={task.id}
-                        id={task.id}
                         status="To Do"
                         crudFlag={crudFlag}
                         isSelected={selectedTask.id === task.id}
+                        task={task}
                       />
                     </Reorder.Item>
                   ))}
@@ -239,7 +257,7 @@ export const Dashboard = () => {
                     >
                       <Task
                         key={task.id}
-                        id={task.id}
+                        task={task}
                         status="In Progress"
                         crudFlag={crudFlag}
                         isSelected={selectedTask.id === task.id}
@@ -281,7 +299,7 @@ export const Dashboard = () => {
                   >
                     <Task
                       key={task.id}
-                      id={task.id}
+                      task={task}
                       status="Done"
                       crudFlag={crudFlag}
                       isSelected={selectedTask.id === task.id}
@@ -294,7 +312,11 @@ export const Dashboard = () => {
       </div>
       <AnimatePresence>
         {addTaskToggler && taskAddOrEdit === "add" && (
-          <AddTask setAddTaskToggler={setAddTaskToggler} />
+          <AddTask
+            setAddTaskToggler={setAddTaskToggler}
+            user={user}
+            setToDo={setToDo}
+          />
         )}
       </AnimatePresence>
       <AnimatePresence>
@@ -302,6 +324,12 @@ export const Dashboard = () => {
           <EditTask
             setEditTaskToggler={setAddTaskToggler}
             task={selectedTask}
+            setSelectedTask={setSelectedTask}
+            selectedTask={selectedTask}
+            user={user}
+            setInProgress={setInProgress}
+            setDone={setDone}
+            setToDo={setToDo}
           />
         )}
       </AnimatePresence>
@@ -326,3 +354,6 @@ export const Dashboard = () => {
     </div>
   );
 };
+
+/// to do
+// task type

@@ -13,9 +13,15 @@ import {
 } from "./animation";
 import { object } from "../../../utils/ValidateErrors";
 import { Input } from "../../../Components/Input";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../Firebase/firebase-config";
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, db } from "../../../Firebase/firebase-config";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
 
 export const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -75,6 +81,22 @@ export const Login = () => {
     [loginData.email, loginData.password, navigate, validate]
   );
 
+  const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((loggedUser) => {
+        const docRef = doc(db, loggedUser.user.email || "", "empty");
+        setDoc(docRef, {});
+      })
+      .then(() => navigate("/dashboard"))
+      .catch((err) => console.log(err));
+  };
+
+  const facebockLogin = () => {
+    const facebockProvider = new FacebookAuthProvider();
+    signInWithPopup(auth, facebockProvider);
+  };
+
   return (
     <div className="login-page-container">
       <motion.div
@@ -129,7 +151,7 @@ export const Login = () => {
           <a href="/signup" className=" login-links">
             Register
           </a>
-          <a href="/" className="login-links">
+          <a href="/password-reset" className="login-links">
             Forgot Password ?
           </a>
         </div>
@@ -200,7 +222,11 @@ export const Login = () => {
           }}
         >
           <div className="login-divider"></div>
-          <button type="button" className="login-facebook-btn">
+          <button
+            type="button"
+            className="login-facebook-btn"
+            onClick={facebockLogin}
+          >
             <svg
               className="w-4 h-4 me-2"
               aria-hidden="true"
@@ -216,7 +242,11 @@ export const Login = () => {
             </svg>
             Sign in with Facebook
           </button>
-          <button type="button" className="login-google-btn">
+          <button
+            type="button"
+            className="login-google-btn"
+            onClick={googleSignIn}
+          >
             <svg
               className="w-4 h-4 me-2"
               aria-hidden="true"

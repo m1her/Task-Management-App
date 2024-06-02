@@ -1,33 +1,50 @@
-import React, { useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../../Firebase/firebase-config";
 import { Input } from "../../../Components/Input";
 import { object } from "../../../utils/ValidateErrors";
+import { useNavigate } from "react-router-dom";
 
 export const ResetPassword = () => {
-  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [resettingData, setResettingData] = useState<{ [k: string]: string }>({
+    email: "",
+  });
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{ [k: string]: string }>({
+    email: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [buttonIsDisabled, setButtonIsDisabled] = useState(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setResettingData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleResetPassword = async (e: any) => {
     e.preventDefault();
-    setIsLoading(true);
-    setMessage("");
-    setError("");
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setMessage("Password reset email sent! Check your inbox.");
-      setIsLoading(false);
-      setTimeout(() => {
-        setError("");
-      }, 700);
-    } catch (error) {
-      setError("Failed to send password reset email. Please try again.");
-      setIsLoading(false);
-      setTimeout(() => {
-        setError("");
-      }, 2000);
+    if (validate()) {
+      setIsLoading(true);
+      sendPasswordResetEmail(auth, resettingData.email)
+        .then(() => {
+          setMessage("Email Sent Successfully!");
+          setIsLoading(false);
+          setTimeout(() => {
+            setMessage("");
+            navigate("/dashboard");
+          }, 2000);
+        })
+        .catch((error) => {
+          setErrors(error);
+          setIsLoading(false);
+          setTimeout(() => {
+            setErrors({ email: "" });
+          }, 2000);
+        });
     }
   };
 
@@ -35,18 +52,15 @@ export const ResetPassword = () => {
     const userSchema = object({
       email: ["string", "required", "email"],
     });
-    const result = userSchema.validate(signupData);
+    const result = userSchema.validate(resettingData);
     setErrors(result.errors);
     setButtonIsDisabled(true);
     setTimeout(() => {
-      setErrors({
-        email: "",
-        password: "",
-      });
+      setErrors({ email: "" });
       setButtonIsDisabled(false);
     }, 2000);
     return result.valid;
-  }, [signupData]);
+  }, [resettingData]);
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -58,12 +72,12 @@ export const ResetPassword = () => {
           <Input
             id="email-reset"
             name="email"
-            type="email"
+            type="text"
             placeholder="My Email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            error={error}
-            errorMsg={error}
+            onChange={handleChange}
+            value={resettingData.email}
+            error={errors?.email}
+            errorMsg={errors?.email}
           />
           <button className="signup-submit-button" type="submit">
             {isLoading ? (
@@ -86,7 +100,7 @@ export const ResetPassword = () => {
                 </svg>
               </div>
             ) : (
-              "Signup"
+              <div>{message !== "" ? message : "Send Email"}</div>
             )}
           </button>
         </form>

@@ -79,7 +79,11 @@ export const ResetPassword = () => {
             error={errors?.email}
             errorMsg={errors?.email}
           />
-          <button className="signup-submit-button" type="submit">
+          <button
+            className="signup-submit-button"
+            type="submit"
+            disabled={buttonIsDisabled}
+          >
             {isLoading ? (
               <div role="status">
                 <svg

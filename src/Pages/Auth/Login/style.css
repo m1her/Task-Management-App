@@ -70,13 +70,13 @@
     bg-[#4285F4]
     hover:bg-[#4285F4]/90
     outline-none
-    font-medium
     rounded
-    text-sm
+    !text-sm
     px-5
     py-2.5
     flex
     justify-center
+    items-center
     w-full;
   }
 
@@ -87,14 +87,14 @@
     bg-[#3b5998]
     hover:bg-[#3b5998]/90
     outline-none
-    font-medium
     rounded
-    text-sm
-    px-5
-    py-2.5
+    !text-sm
+    !px-5
+    !py-2.5
     flex
     justify-center
-    mb-2;
+    items-center
+    !mb-2;
   }
 
   .login-divider {

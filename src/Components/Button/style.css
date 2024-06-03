@@ -1,0 +1,32 @@
+@tailwind components;
+
+@layer components {
+  .button {
+    @apply gap-4 
+      rounded
+      font-bold 
+      text-lg
+      duration-300 
+      py-2.5         
+      px-12;
+    /* 
+      cursor-pointer 
+      text-white 
+      inline-block 
+      font-normal 
+      text-center 
+      whitespace-nowrap 
+      align-middle 
+      select-none 
+      border-transparent 
+      py-1 
+      px-2 
+      text-base 
+      rounded-md 
+      transition 
+      ease-in-out 
+      duration-150 
+      transform-none 
+      focus:outline-none; */
+  }
+}

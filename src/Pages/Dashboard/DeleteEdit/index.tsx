@@ -5,26 +5,31 @@ import React from "react";
 
 interface DeleteEditTypes {
   setCrudFlag: React.Dispatch<React.SetStateAction<string>>;
+  dragToggler: boolean;
 }
 
-export const DeleteEdit = ({ setCrudFlag }: DeleteEditTypes) => {
+export const DeleteEdit = ({ setCrudFlag, dragToggler }: DeleteEditTypes) => {
   return (
     <div className="dash-delete-edit-container">
       <div className="dash-delete">
         <FontAwesomeIcon icon={faTrashCan} />
-        <div
-          className="dash-delete-edit-pointer-card"
-          onMouseOver={() => setCrudFlag("delete")}
-          onMouseLeave={() => setCrudFlag("")}
-        ></div>
+        {dragToggler && (
+          <div
+            className="dash-delete-edit-pointer-card"
+            onMouseOver={() => setCrudFlag("delete")}
+            onMouseLeave={() => setCrudFlag("")}
+          ></div>
+        )}
       </div>
       <div className="dash-edit">
         <FontAwesomeIcon icon={faEdit} />
-        <div
-          className="dash-delete-edit-pointer-card"
-          onMouseOver={() => setCrudFlag("edit")}
-          onMouseLeave={() => setCrudFlag("")}
-        ></div>
+        {dragToggler && (
+          <div
+            className="dash-delete-edit-pointer-card"
+            onMouseOver={() => setCrudFlag("edit")}
+            onMouseLeave={() => setCrudFlag("")}
+          ></div>
+        )}
       </div>
     </div>
   );

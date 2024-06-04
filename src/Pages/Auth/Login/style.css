@@ -45,7 +45,7 @@
 
   .login-successful-message {
     @apply relative
-    text-[64px]
+    text-[58px]
     font-extralight
     text-[#3B82F6]
     transition-colors
@@ -122,6 +122,9 @@
     font-semibold
     text-center
     rounded
+    flex
+    justify-center
+    items-center
     transition-colors
     duration-300;
   }

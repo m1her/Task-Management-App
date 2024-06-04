@@ -41,6 +41,7 @@ export const Dashboard = () => {
     if (crudFlag === "edit") {
       setAddTaskToggler(true);
       setTaskAddOrEdit("edit");
+      //  setCrudFlag("");
     } else if (crudFlag === "delete") {
       if (selectedTask?.status === "in-progress") {
         setInProgress((prev: any) =>
@@ -327,11 +328,13 @@ export const Dashboard = () => {
           />
         )}
       </AnimatePresence>
-      <DeleteEdit setCrudFlag={setCrudFlag} />
+      <DeleteEdit setCrudFlag={setCrudFlag} dragToggler={dragToggler} />
     </div>
   );
 };
 
 /// to do
 // task type
+// when edit remove blue color
+// due time & date selector
 //353

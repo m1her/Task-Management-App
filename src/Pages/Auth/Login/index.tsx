@@ -236,7 +236,7 @@ export const Login = () => {
           </motion.div>
         </div>
       </motion.div>
-      <div className="absolute right-52">
+      <div className="absolute right-24">
         <motion.div
           className="login-successful-message"
           variants={loginSuccessfulMessageVarients}

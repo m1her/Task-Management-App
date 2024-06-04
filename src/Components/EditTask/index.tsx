@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../Firebase/firebase-config";
 import { User } from "firebase/auth";
+import "./style.css";
+import { Button } from "../Button";
 
 interface taskType {
   title: string;
@@ -97,20 +99,20 @@ export const EditTask = ({
 
   return (
     <motion.div
-      className="fixed w-full backdrop-blur-sm h-screen flex justify-center items-center top-0 left-0 z-50 "
+      className="edit-task-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <div
-        className="absolute top-0 left-0 z-10 w-full h-screen"
+        className="edit-task-pointer"
         onClick={() => {
           setEditTaskToggler(false);
           document.body.classList.remove("overflow-hidden");
           setSelectedTask({});
         }}
       ></div>
-      <div className="bg-white p-8 rounded-lg shadow-[0_0_12px_3px_rgba(0,0,0,0.2)] z-20 flex flex-col gap-y-2 min-w-[500px]">
+      <div className="edit-task-card">
         <Input
           id="task-title"
           name="title"
@@ -135,13 +137,12 @@ export const EditTask = ({
           value={taskData?.due}
           onChange={handleChange}
         />
-        <div className="w-full flex justify-end items-center">
-          <div
-            className=" font-medium mt-2 bg-[rgb(59,130,246)] text-white flex justify-center items-center rounded py-1 px-6 cursor-pointer hover:bg-[rgb(70,139,251)] shadow-[0_0_7px_2px_rgba(59,130,246,0.3)] hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)] transition-all "
+        <div className="edit-task-save-btn-container">
+          <Button
+            styles="edit-task-save-btn"
+            label="Save"
             onClick={editHandler}
-          >
-            Save
-          </div>
+          />
         </div>
       </div>
     </motion.div>

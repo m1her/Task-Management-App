@@ -4,7 +4,10 @@ type LoadingProps = {
 
 export const Loading = ({ styles }: LoadingProps) => {
   return (
-    <div className={`flex-center ${styles}`} role="status">
+    <div
+      className={`flex justify-center items-center w-full ${styles}`}
+      role="status"
+    >
       <svg
         aria-hidden="true"
         className="signup-loading"

@@ -5,7 +5,6 @@ import { AnimatePresence, Reorder } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../Firebase/firebase-config";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -14,11 +13,9 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Input } from "../../Components/Input";
 import { AddTask } from "../../Components/AddTask";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { EditTask } from "../../Components/EditTask";
+import { DeleteEdit } from "./DeleteEdit";
 
 export const Dashboard = () => {
   const [user] = useAuthState(auth);
@@ -172,11 +169,8 @@ export const Dashboard = () => {
   return (
     <div className={`${addTaskToggler ? "overflow-hidden " : "inline "}`}>
       <nav className="dash-title">Task Manager</nav>
-      <div className="w-full flex justify-center items-center z-50">
-        <div
-          className="text-lg font-semibold bg-[#3b82f6] text-white z-50 flex justify-center items-center rounded py-1 px-12 cursor-pointer hover:bg-[rgb(70,139,251)] shadow-[0_0_7px_2px_rgba(59,130,246,0.3)] hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)] transition-all "
-          onClick={addTaskHandler}
-        >
+      <div className="dash-add-task-btn-container">
+        <div className="dash-add-task-btn " onClick={addTaskHandler}>
           Add Task
         </div>
       </div>
@@ -333,27 +327,11 @@ export const Dashboard = () => {
           />
         )}
       </AnimatePresence>
-      <div className="fixed w-full flex justify-between gap-x-4 top-0 left-0 p-8 z-40">
-        <div className="bg-[#EF4444]/40 text-[#EF4444] relative text-xl w-12 rounded aspect-square flex justify-center items-center">
-          <FontAwesomeIcon icon={faTrashCan} />
-          <div
-            className="w-32 aspect-square absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 z-50 cursor-grab"
-            onMouseOver={() => setCrudFlag("delete")}
-            onMouseLeave={() => setCrudFlag("")}
-          ></div>
-        </div>
-        <div className="bg-[#3b82f6]/40 text-[#3b82f6] relative text-xl w-12 rounded aspect-square flex justify-center items-center">
-          <FontAwesomeIcon icon={faEdit} />
-          <div
-            className="w-32 aspect-square absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 z-50 cursor-grab"
-            onMouseOver={() => setCrudFlag("edit")}
-            onMouseLeave={() => setCrudFlag("")}
-          ></div>
-        </div>
-      </div>
+      <DeleteEdit setCrudFlag={setCrudFlag} />
     </div>
   );
 };
 
 /// to do
 // task type
+//353

@@ -7,16 +7,18 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../Firebase/firebase-config";
+import { StatusFlagType, TaskType, TasksType } from "./types";
+import { User } from "firebase/auth";
 
 interface ChangeTaskStatusTypes {
-  selectedTask: any;
-  setInProgress: any;
-  setSelectedTask: any;
-  setDone: any;
-  setToDo: any;
-  setTasks: any;
-  user: any;
-  statusFlag: any;
+  selectedTask?: TaskType;
+  setInProgress: React.Dispatch<React.SetStateAction<TasksType>>;
+  setSelectedTask: React.Dispatch<React.SetStateAction<TaskType | undefined>>;
+  setDone: React.Dispatch<React.SetStateAction<TasksType>>;
+  setToDo: React.Dispatch<React.SetStateAction<TasksType>>;
+  setTasks: React.Dispatch<React.SetStateAction<TasksType | undefined>>;
+  user: User | null | undefined;
+  statusFlag: StatusFlagType;
 }
 
 export const ChangeTaskStatus = async ({
@@ -29,7 +31,7 @@ export const ChangeTaskStatus = async ({
   user,
   statusFlag,
 }: ChangeTaskStatusTypes) => {
-  if (selectedTask.status !== statusFlag) {
+  if (selectedTask?.status !== statusFlag) {
     if (selectedTask?.status === "to-do") {
       setToDo((prev: any) =>
         prev.filter((task: any) => task.id !== selectedTask.id)
@@ -57,9 +59,9 @@ export const ChangeTaskStatus = async ({
     if (statusFlag === "done") {
       setDone((prev: any) => [...prev, { ...selectedTask, status: "done" }]);
     }
-    setTasks((prevTasks: any[]) =>
-      prevTasks.map((task) =>
-        task.id === selectedTask.id ? { ...task, status: statusFlag } : task
+    setTasks((prevTasks: any) =>
+      prevTasks.map((task: TaskType) =>
+        task.id === selectedTask?.id ? { ...task, status: statusFlag } : task
       )
     );
   }
@@ -67,11 +69,10 @@ export const ChangeTaskStatus = async ({
   if (user) {
     const q = query(
       collection(db, user?.email || ""),
-      where("id", "==", selectedTask.id)
+      where("id", "==", selectedTask?.id)
     );
 
     const querySnapshot = await getDocs(q);
-
     if (querySnapshot) {
       const docRef = doc(db, user?.email || "", querySnapshot.docs[0].id);
       await updateDoc(docRef, {
@@ -79,5 +80,5 @@ export const ChangeTaskStatus = async ({
       });
     }
   }
-  setSelectedTask({});
+  setSelectedTask(undefined);
 };

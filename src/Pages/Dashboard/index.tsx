@@ -83,11 +83,11 @@ export const Dashboard = () => {
         const docs = querySnapshot.docs.map(
           (doc) =>
             ({
-              id: doc.id,
+              id: doc.data().id,
               title: doc.data()?.title,
               description: doc.data()?.description,
               due: doc.data()?.due,
-              status: doc.data()?.satus,
+              status: doc.data()?.status,
             } as unknown as TaskType)
         );
         setTasks(docs);
@@ -117,7 +117,13 @@ export const Dashboard = () => {
     <div className={`${addTaskToggler ? "overflow-hidden " : "inline "}`}>
       <nav className="dash-title">Task Manager</nav>
       <div className="dash-add-task-btn-container">
-        <div className="dash-add-task-btn " onClick={addTaskHandler}>
+        <div
+          className="dash-add-task-btn "
+          onClick={() => {
+            addTaskHandler();
+            console.log(tasks, done, inProgress, toDo);
+          }}
+        >
           Add Task
         </div>
       </div>

@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import "./../style.css";
 import React from "react";
+import { CrydFlagType } from "../types";
 
 interface DeleteEditTypes {
-  setCrudFlag: React.Dispatch<React.SetStateAction<string>>;
+  setCrudFlag: React.Dispatch<React.SetStateAction<CrydFlagType>>;
   dragToggler: boolean;
 }
 

@@ -12,12 +12,12 @@ export const ResetPassword = () => {
   const [resettingData, setResettingData] = useState<{ [k: string]: string }>({
     email: "",
   });
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const [errors, setErrors] = useState<{ [k: string]: string }>({
     email: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [buttonIsDisabled, setButtonIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [buttonIsDisabled, setButtonIsDisabled] = useState<boolean>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;

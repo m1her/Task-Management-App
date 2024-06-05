@@ -42,7 +42,6 @@ export const Input = ({
         autoComplete="off"
         id={id}
         name={name}
-        //   type={!hide ? type : "text"}
         type={type}
         value={value}
         className={`input-tag ${inputStyle}`}

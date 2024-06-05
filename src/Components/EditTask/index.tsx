@@ -13,42 +13,35 @@ import { db } from "../../Firebase/firebase-config";
 import { User } from "firebase/auth";
 import "./style.css";
 import { Button } from "../Button";
-
-interface taskType {
-  title: string;
-  description: string;
-  due: string;
-  status: string;
-  id: number;
-}
+import { TaskType, TasksType } from "../../Pages/Dashboard/types";
 
 interface addTaskProps {
   setEditTaskToggler: React.Dispatch<React.SetStateAction<boolean>>;
-  task: taskType;
   setSelectedTask: React.Dispatch<any>;
-  selectedTask: any;
+  selectedTask: TaskType | undefined;
   user: User | null | undefined;
-  setInProgress: any;
-  setDone: any;
-  setToDo: any;
+  setInProgress: React.Dispatch<React.SetStateAction<TasksType>>;
+  setDone: React.Dispatch<React.SetStateAction<TasksType>>;
+  setToDo: React.Dispatch<React.SetStateAction<TasksType>>;
+  setTasks: React.Dispatch<React.SetStateAction<TasksType | undefined>>;
 }
 
 export const EditTask = ({
   setEditTaskToggler,
-  task,
   setSelectedTask,
   selectedTask,
   user,
   setInProgress,
   setDone,
   setToDo,
+  setTasks,
 }: addTaskProps) => {
   const [taskData, setTaskData] = useState({
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    due: task.due,
-    status: task.status,
+    id: selectedTask?.id,
+    title: selectedTask?.title,
+    description: selectedTask?.description,
+    due: selectedTask?.due,
+    status: selectedTask?.status,
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +55,7 @@ export const EditTask = ({
   const editHandler = async () => {
     const q = query(
       collection(db, user?.email || ""),
-      where("id", "==", selectedTask.id)
+      where("id", "==", selectedTask?.id)
     );
 
     const querySnapshot = await getDocs(q);
@@ -92,6 +85,11 @@ export const EditTask = ({
         )
       );
     }
+    setTasks((prev: any) =>
+      prev.map((task: any) =>
+        task.id === selectedTask?.id ? { ...task, ...taskData } : task
+      )
+    );
     setEditTaskToggler(false);
     document.body.classList.remove("overflow-hidden");
     setSelectedTask({});

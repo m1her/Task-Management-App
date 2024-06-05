@@ -22,16 +22,16 @@ import { facebockSignup } from "../../../utils/FacebookSignin";
 import { googleSignIn } from "../../../utils/GoogleSignin";
 
 export const Login = () => {
-  const [loginData, setLoginData] = useState({
+  const [loginData, setLoginData] = useState<{ [k: string]: string }>({
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState<{ [k: string]: any }>({
+  const [errors, setErrors] = useState<{ [k: string]: string }>({
     email: "",
     password: "",
   });
-  const [isChecked, setIsChecked] = useState("none");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState<"true" | "wrong" | "">("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -73,6 +73,10 @@ export const Login = () => {
           .catch((err) => {
             setErrors({ email: "Wrong email or password", password: "" });
             setIsLoading(false);
+            setIsChecked("wrong");
+            setTimeout(() => {
+              setIsChecked("");
+            }, 1800);
           });
       }
     },
@@ -130,10 +134,24 @@ export const Login = () => {
         </div>
 
         <div className="login-links-container">
-          <a href="/signup" className=" login-links">
+          <a
+            href="/signup"
+            className={`login-links  ${
+              isChecked === "wrong"
+                ? "text-[#EF4444]"
+                : "hover:text-[#4e92ff] text-[#3B82F6]"
+            } `}
+          >
             Register
           </a>
-          <a href="/password-reset" className="login-links">
+          <a
+            href="/password-reset"
+            className={`login-links  ${
+              isChecked === "wrong"
+                ? "text-[#EF4444]"
+                : "hover:text-[#4e92ff] text-[#3B82F6]"
+            } `}
+          >
             Forgot Password ?
           </a>
         </div>

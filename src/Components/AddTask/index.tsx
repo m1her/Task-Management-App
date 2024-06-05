@@ -1,17 +1,30 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import { Input } from "../Input";
 import { motion } from "framer-motion";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../Firebase/firebase-config";
 import { User } from "firebase/auth";
+import { object } from "../../utils/ValidateErrors";
+import { TasksType } from "../../Pages/Dashboard/types";
 
 interface addTaskProps {
   setAddTaskToggler: React.Dispatch<React.SetStateAction<boolean>>;
   user: User | null | undefined;
-  setToDo: React.Dispatch<any>;
+  setToDo: React.Dispatch<React.SetStateAction<TasksType>>;
+  setTasks: React.Dispatch<React.SetStateAction<TasksType | undefined>>;
 }
-export const AddTask = ({ setAddTaskToggler, user, setToDo }: addTaskProps) => {
+export const AddTask = ({
+  setAddTaskToggler,
+  user,
+  setToDo,
+  setTasks,
+}: addTaskProps) => {
   const [taskData, setTaskData] = useState({
+    title: "",
+    description: "",
+    due: "",
+  });
+  const [errors, setErrors] = useState({
     title: "",
     description: "",
     due: "",
@@ -25,20 +38,41 @@ export const AddTask = ({ setAddTaskToggler, user, setToDo }: addTaskProps) => {
     }));
   };
 
+  const validate = useCallback(() => {
+    const userSchema = object({
+      title: ["string", "required"],
+      description: ["string", "required"],
+      due: ["required"],
+    });
+    const result = userSchema.validate(taskData);
+    setErrors(result.errors);
+    setTimeout(() => {
+      setErrors({
+        title: "",
+        description: "",
+        due: "",
+      });
+    }, 2000);
+    return result.valid;
+  }, [taskData]);
+
   const addTaskHandler = () => {
-    if (user) {
-      let task = {
-        id: Math.random(),
-        title: taskData.title,
-        description: taskData.description,
-        due: taskData.due,
-        status: "to-do",
-      };
-      addDoc(collection(db, user.email || ""), task);
-      setToDo((prev: any) => [...prev, task]);
+    if (validate()) {
+      if (user) {
+        let task = {
+          id: Math.random(),
+          title: taskData.title,
+          description: taskData.description,
+          due: taskData.due,
+          status: "to-do",
+        };
+        addDoc(collection(db, user.email || ""), task);
+        setToDo((prev: any) => [...prev, task]);
+        setTasks((prev: any) => [...prev, task]);
+      }
+      setAddTaskToggler(false);
+      document.body.classList.remove("overflow-hidden");
     }
-    setAddTaskToggler(false);
-    document.body.classList.remove("overflow-hidden");
   };
   return (
     <motion.div
@@ -62,6 +96,8 @@ export const AddTask = ({ setAddTaskToggler, user, setToDo }: addTaskProps) => {
           inputStyle="text-sm"
           value={taskData?.title}
           onChange={handleChange}
+          error={errors?.title}
+          errorMsg={errors?.title}
         />
         <Input
           id="task-description"
@@ -70,14 +106,19 @@ export const AddTask = ({ setAddTaskToggler, user, setToDo }: addTaskProps) => {
           inputStyle="text-sm"
           value={taskData?.description}
           onChange={handleChange}
+          error={errors?.description}
+          errorMsg={errors?.description}
         />
         <Input
           id="task-due"
           name="due"
+          type="date"
           placeholder="Task Due Date"
           inputStyle="text-sm"
           value={taskData?.due}
           onChange={handleChange}
+          error={errors?.due}
+          errorMsg={errors?.due}
         />
         <div className="w-full flex justify-end items-center">
           <div

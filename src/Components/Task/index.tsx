@@ -1,12 +1,12 @@
-import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./style.css";
+import { CrydFlagType, TaskType } from "../../Pages/Dashboard/types";
 
 interface taskTypes {
-  status: string;
-  crudFlag: string;
+  status: "To Do" | "In Progress" | "Done";
+  crudFlag: CrydFlagType;
   isSelected: boolean;
-  task: any;
+  task: TaskType;
 }
 
 export const Task = ({ status, crudFlag, isSelected, task }: taskTypes) => {

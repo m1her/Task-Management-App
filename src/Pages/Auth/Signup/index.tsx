@@ -27,7 +27,7 @@ export const Signup = () => {
     password: "",
   });
 
-  const [isSubmeted, setIsSubmeted] = useState("none");
+  const [isSubmeted, setIsSubmeted] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [buttonIsDisabled, setButtonIsDisabled] = useState(false);
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ export const Signup = () => {
           signupData.password
         )
           .then(() => {
-            setIsSubmeted("true");
+            setIsSubmeted(true);
             setIsLoading(false);
             const docRef = doc(db, signupData.email, "empty");
             setDoc(docRef, {});
@@ -94,7 +94,7 @@ export const Signup = () => {
         <div className="signup-title">Task Manager</div>
         <div className="flex items-center gap-x-2 mt-4">
           <AnimatePresence>
-            {isSubmeted === "true" && (
+            {isSubmeted && (
               <motion.div
                 key="modal"
                 className="signup-checkbox"
@@ -118,7 +118,7 @@ export const Signup = () => {
                     variants={signupCheckPathVarients}
                     initial={signupCheckPathVarients.initial}
                     animate={
-                      isSubmeted === "true"
+                      isSubmeted
                         ? signupCheckPathVarients.animateTrue
                         : signupCheckPathVarients.animate
                     }
@@ -143,7 +143,7 @@ export const Signup = () => {
         </div>
         <div className="flex items-center gap-x-2 mt-4">
           <AnimatePresence>
-            {isSubmeted === "true" && (
+            {isSubmeted && (
               <motion.div
                 key="modal"
                 className="signup-checkbox"
@@ -167,7 +167,7 @@ export const Signup = () => {
                     variants={signupCheckPathVarients}
                     initial={signupCheckPathVarients.initial}
                     animate={
-                      isSubmeted === "true"
+                      isSubmeted
                         ? signupCheckPathVarients.animateTrue
                         : signupCheckPathVarients.animate
                     }

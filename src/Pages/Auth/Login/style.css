@@ -131,8 +131,7 @@
 
   .login-links {
     @apply hover:underline
-    hover:text-[#4e92ff]
-    text-[#3B82F6]
+    
     text-sm
     font-medium
     mt-1;

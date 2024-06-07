@@ -17,6 +17,9 @@ import {
   TaskType,
   TasksType,
 } from "./types";
+import { Button } from "../../Components";
+import { signOut } from "firebase/auth";
+import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 
 export const Dashboard = () => {
   const [user] = useAuthState(auth);
@@ -286,11 +289,13 @@ export const Dashboard = () => {
         )}
       </AnimatePresence>
       <DeleteEdit setCrudFlag={setCrudFlag} dragToggler={dragToggler} />
+      <div className="absolute bottom-8 right-8">
+        <Button
+          styles="dash-signout-btn"
+          icon={faSignOut}
+          onClick={() => signOut(auth)}
+        />
+      </div>
     </div>
   );
 };
-
-/// to do
-/// protected dash
-/// logout
-//353

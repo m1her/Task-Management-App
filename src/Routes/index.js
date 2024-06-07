@@ -1,5 +1,6 @@
-import { Routes, Route } from "react-router-dom";
-import { unAuthProtectedRoutes } from "./allRoutes";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { authProtectedRoutes, unAuthProtectedRoutes } from "./allRoutes";
+import { AuthProtected } from "./AuthProtected";
 
 export const Routs = () => {
   return (
@@ -14,6 +15,21 @@ export const Routs = () => {
           />
         ))}
       </Route>
+
+      {authProtectedRoutes.map((route, idx) => (
+        <Route
+          key={idx}
+          path={route.path}
+          exact
+          element={
+            <AuthProtected>
+              <div>{route.component}</div>
+            </AuthProtected>
+          }
+        />
+      ))}
+
+      <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
 };

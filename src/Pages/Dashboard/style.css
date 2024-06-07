@@ -136,4 +136,16 @@
     items-center
     z-50;
   }
+
+  .dash-signout-btn {
+    @apply text-white
+    bg-[#3b82f6]
+    hover:bg-[rgb(70,139,251)]
+    shadow-[0_0_7px_2px_rgba(59,130,246,0.3)]
+    hover:shadow-[0_0_7px_2px_rgba(70,139,251,0.3)]
+    rounded-full
+    !py-4
+    !px-5
+    text-sm;
+  }
 }

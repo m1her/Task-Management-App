@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { authProtectedRoutes, unAuthProtectedRoutes } from "./allRoutes";
 import { AuthProtected } from "./AuthProtected";
 
@@ -28,6 +28,8 @@ export const Routs = () => {
           }
         />
       ))}
+
+      <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
 };
